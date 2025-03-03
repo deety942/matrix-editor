@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Matrix Text Editor</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: monospace;
+      margin: 0;
+      overflow: hidden;
+    }
+    #editor {
+      width: 100vw;
+      height: 90vh; /* Adjusted height to make room for the button */
+      padding: 20px;
+      box-sizing: border-box;
+      resize: none;
+      background-color: transparent;
+      border: none;
+      color: #0f0;
+      font-family: monospace;
+      font-size: 16px;
+      outline: none;
+    }
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .matrix-char {
+      position: absolute;
+      color: #0f0;
+      font-size: 16px;
+      animation: matrixFall linear infinite;
+    }
+    @keyframes matrixFall {
+      0% {
+        transform: translateY(-20px);
+      }
+      100% {
+        transform: translateY(100vh);
+      }
+    }
+    #saveButton {
+      background-color: #000;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 10px 20px;
+      font-family: monospace;
+      font-size: 16px;
+      cursor: pointer;
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="editor"></textarea>
+  <div id="overlay"></div>
+  <button id="saveButton">Save</button>
+
+  <script>
+    const editor = document.getElementById('editor');
+    const overlay = document.getElementById('overlay');
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~`|}{[]\:;?><,./-=";
+    const saveButton = document.getElementById('saveButton');
+
+    function createMatrixCharacter() {
+      const char = document.createElement('span');
+      char.className = 'matrix-char';
+      char.textContent = characters.charAt(Math.floor(Math.random() * characters.length));
+      char.style.left = Math.random() * 100 + 'vw';
+      char.style.animationDuration = Math.random() * 3 + 2 + 's';
+      char.style.opacity = Math.random() * 0.7 + 0.3;
+      overlay.appendChild(char);
+
+      setTimeout(() => {
+        char.remove();
+      }, parseFloat(char.style.animationDuration) * 1000);
+    }
+
+    setInterval(createMatrixCharacter, 50);
+
+    saveButton.addEventListener('click', () => {
+      const text = editor.value;
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'matrix-text.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
