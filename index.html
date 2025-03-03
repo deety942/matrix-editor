@@ -12,7 +12,7 @@
     }
     #editor {
       width: 100vw;
-      height: 90vh; /* Adjusted height to make room for the button */
+      height: 90vh;
       padding: 20px;
       box-sizing: border-box;
       resize: none;
@@ -89,13 +89,17 @@
 
     saveButton.addEventListener('click', () => {
       const text = editor.value;
-      const blob = new Blob([text], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'matrix-text.txt';
-      a.click();
-      URL.revokeObjectURL(url);
+      const fileName = prompt("Enter the file name:", "matrix-text.txt");
+
+      if (fileName) {
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
     });
   </script>
 </body>
